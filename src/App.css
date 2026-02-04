@@ -3,40 +3,63 @@ html,
 #root {
   margin: 0;
   padding: 0;
-  height: 100%;
-  background: linear-gradient(135deg, #fbe8f9 0%, #d0f0fd 100%);
-  font-family: sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f5f7fa 0%, #e8ecf0 100%);
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   justify-content: center;
-  gap: 16px;
-  padding: 16px;
-  background: transparent;
+  gap: 8px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .nav-button {
-  padding: 10px 20px;
-  border-radius: 10px;
-  background-color: #2196f3;
-  color: #fff;
+  position: relative;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: transparent;
+  color: #1a1a2e;
   text-decoration: none;
   font-weight: 500;
-  transition: background-color 0.2s, transform 0.2s;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.nav-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .nav-button:hover {
-  background-color: #1976d2;
-  transform: scale(1.05);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.5);
 }
 
-.home-container,
-.history-container {
-  max-width: 1200px;
-  margin: 24px auto;
-  padding: 24px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.nav-button:hover::before {
+  opacity: 1;
+}
+
+.nav-button span {
+  position: relative;
+  z-index: 1;
 }

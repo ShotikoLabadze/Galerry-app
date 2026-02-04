@@ -1,30 +1,72 @@
 .history-container {
-  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #a0c4ff, #ffc6ff);
+  animation: fadeIn 0.5s ease;
+}
+
+.history-container h2 {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .history-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  gap: 0.3rem;
-  margin-bottom: 1rem;
+  gap: 12px;
+  margin-bottom: 40px;
+  padding: 24px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .history-buttons button {
-  padding: 0.4rem 0.8rem;
+  padding: 12px 24px;
   border: none;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #a0c4ff, #bdb2ff);
-  color: #fff;
+  border-radius: 12px;
+  background: #f5f7fa;
+  color: #1a1a2e;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.history-buttons button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .history-buttons button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+}
+
+.history-buttons button:hover::before {
+  opacity: 1;
+}
+
+.history-buttons button span {
+  position: relative;
+  z-index: 1;
+}
+
+.separator {
+  color: #9ca3af;
+  opacity: 0.5;
 }
