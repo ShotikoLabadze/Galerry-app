@@ -60,7 +60,7 @@ export default function Home() {
         setLoading(false);
       }
     },
-    [cache, updateCache],
+    [cache, updateCache, loading],
   );
 
   useEffect(() => {
