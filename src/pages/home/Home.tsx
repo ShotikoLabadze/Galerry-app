@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   getPhotos,
   searchPhotos,
@@ -31,46 +31,44 @@ export default function Home() {
 
   const currentTermRef = useRef<string>("popular");
 
-  // Fetch photos (popular or search)
-  const fetchPhotos = async (term: string, pageNumber: number) => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      let newPhotos: GalleryPhoto[] = [];
+  const fetchPhotos = useCallback(
+    async (term: string, pageNumber: number) => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        let newPhotos: GalleryPhoto[] = [];
 
-      // Use cache if first page
-      if (cache[term] && pageNumber === 1) {
-        newPhotos = cache[term];
-      } else {
-        if (term === "popular") {
-          newPhotos = await getPhotos(pageNumber, PHOTOS_PER_PAGE);
+        if (cache[term] && pageNumber === 1) {
+          newPhotos = cache[term];
         } else {
-          newPhotos = await searchPhotos(term, pageNumber, PHOTOS_PER_PAGE);
+          if (term === "popular") {
+            newPhotos = await getPhotos(pageNumber, PHOTOS_PER_PAGE);
+          } else {
+            newPhotos = await searchPhotos(term, pageNumber, PHOTOS_PER_PAGE);
+          }
+
+          const prev = pageNumber === 1 ? [] : cache[term] || [];
+          updateCache(term, [...prev, ...newPhotos]);
         }
 
-        // Update cache
-        const prev = pageNumber === 1 ? [] : cache[term] || [];
-        updateCache(term, [...prev, ...newPhotos]);
+        setPhotos((prev) =>
+          pageNumber === 1 ? newPhotos : [...prev, ...newPhotos],
+        );
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
+    },
+    [cache, updateCache],
+  );
 
-      setPhotos((prev) =>
-        pageNumber === 1 ? newPhotos : [...prev, ...newPhotos]
-      );
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Initial load
   useEffect(() => {
     currentTermRef.current = "popular";
     fetchPhotos("popular", 1);
     setPage(1);
-  }, []);
+  }, [fetchPhotos]);
 
-  // Infinite scroll
   useEffect(() => {
     const handleScroll = () => {
       if (
@@ -85,13 +83,11 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading]);
 
-  // Fetch next page
   useEffect(() => {
     if (page === 1) return;
     fetchPhotos(currentTermRef.current, page);
-  }, [page]);
+  }, [page, fetchPhotos]);
 
-  // Search term changes
   useEffect(() => {
     const delay = setTimeout(() => {
       const term = searchTerm.trim() === "" ? "popular" : searchTerm;
@@ -103,7 +99,7 @@ export default function Home() {
     }, 500);
 
     return () => clearTimeout(delay);
-  }, [searchTerm]);
+  }, [searchTerm, fetchPhotos, addSearchTerm]);
 
   const handlePhotoClick = async (photo: GalleryPhoto) => {
     setSelectedPhoto(photo);
@@ -138,7 +134,11 @@ export default function Home() {
         ))}
       </div>
 
-      {loading && <p style={{ textAlign: "center" }}>Loading...</p>}
+      {loading && (
+        <div className="loading-container">
+          <p>Loading...</p>
+        </div>
+      )}
 
       {modalOpen && selectedPhoto && (
         <PhotoModal

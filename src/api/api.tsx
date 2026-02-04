@@ -15,24 +15,23 @@ if (!ACCESS_KEY) throw new Error("Unsplash Access Key is missing!");
 export async function getPhotos(
   page = 1,
   perPage = 20,
-  order: "popular" | "latest" = "popular"
+  order: "popular" | "latest" = "popular",
 ): Promise<GalleryPhoto[]> {
   const res = await fetch(
-    `${BASE_URL}/photos?page=${page}&per_page=${perPage}&order_by=${order}&client_id=${ACCESS_KEY}`
+    `${BASE_URL}/photos?page=${page}&per_page=${perPage}&order_by=${order}&client_id=${ACCESS_KEY}`,
   );
 
   if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
   return res.json();
 }
 
-// Search photos
 export async function searchPhotos(
   query: string,
   page = 1,
-  perPage = 20
+  perPage = 20,
 ): Promise<GalleryPhoto[]> {
   const res = await fetch(
-    `${BASE_URL}/search/photos?query=${query}&page=${page}&per_page=${perPage}&client_id=${ACCESS_KEY}`
+    `${BASE_URL}/search/photos?query=${query}&page=${page}&per_page=${perPage}&client_id=${ACCESS_KEY}`,
   );
 
   if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
@@ -40,10 +39,9 @@ export async function searchPhotos(
   return data.results;
 }
 
-// Get photo statistics
 export async function getPhotoStats(photoId: string) {
   const res = await fetch(
-    `${BASE_URL}/photos/${photoId}?client_id=${ACCESS_KEY}`
+    `${BASE_URL}/photos/${photoId}?client_id=${ACCESS_KEY}`,
   );
   if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
   return res.json();

@@ -30,7 +30,6 @@ export default function History() {
   } | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Load photos from cache or API
   const loadPhotos = useCallback(
     async (term: string, page: number) => {
       if (loading) return;
@@ -43,11 +42,9 @@ export default function History() {
         const start = (page - 1) * PHOTOS_PER_PAGE;
         const end = start + PHOTOS_PER_PAGE;
 
-        // If cache has enough photos for this page, use it
         if (cachedPhotos.length >= end) {
           batch = cachedPhotos.slice(start, end);
         } else {
-          // Fetch more from API
           const fetchedPhotos =
             term === "popular"
               ? await getPhotos(page, PHOTOS_PER_PAGE)
@@ -65,17 +62,15 @@ export default function History() {
         setLoading(false);
       }
     },
-    [cache, updateCache, loading]
+    [cache, updateCache, loading],
   );
 
-  // Handle history term click
   const handleHistoryClick = (term: string) => {
     setCurrentTerm(term);
     pageRef.current = 1;
     loadPhotos(term, 1);
   };
 
-  // Infinite scroll
   useEffect(() => {
     const handleScroll = () => {
       if (!currentTerm) return;
